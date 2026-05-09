@@ -49,10 +49,10 @@ let config = {
 		{
 			module: "MMM-hcvault",
 			// debug lines to check the connection to vault
-			//header: "myVault",
-			//position: "top_right",
+			header: "myVault",
+			position: "top_right",
 			config: {
-				vaultAddr: "http://127.0.0.1:8200",
+				vaultAddr: "https://127.0.0.1:8200",
 				authMethod: "approle",
 				roleIdPath: "/etc/magicmirror/vault/role_id",
 				secretIdPath: "/etc/magicmirror/vault/secret_id",
@@ -94,15 +94,15 @@ let config = {
 						symbol: "calendar-check",
 						url: "https://www.ferienwiki.de/exports/ferien/2026/de/hessen"
 					},
-					{
+					/*{
 						symbol: ["calendar"],
 						url: "webcal://calendar.google.com/calendar/ical/canedo.guille%40gmail.com/public/basic.ics",
 						showLocation: true
-					}
+					}*/
 				]
 			}
 		},
-/*
+
 		{
 			module: "calendar",
 			header: "Hesse Holidays",
@@ -135,7 +135,7 @@ let config = {
 				]
 			}
 		},
-*/
+
 		{
 			  module: "MMM-PublicTransportHafas",
 			  position: "bottom_left",

@@ -1,0 +1,7 @@
+{
+  "name": "MMM-hcvault",
+  "version": "1.0.0",
+  "description": "HashiCorp Vault credential provider for MagicMirror²",
+  "main": "node_helper.js",
+  "dependencies": {}
+}

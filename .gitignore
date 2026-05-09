@@ -55,10 +55,10 @@ Temporary Items
 .Trash-*
 
 # Ignore all modules
-/modules/*
+#/modules/*
 
 # Ignore users config file but keep the samples.
-config
+#config
 !config/config.js.sample
 !config/custom.css.sample
 

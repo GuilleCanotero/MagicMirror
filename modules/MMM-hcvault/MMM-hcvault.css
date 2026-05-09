@@ -1,0 +1,13 @@
+.mmm-hcvault {
+  text-align: left;
+  padding: 8px;
+}
+
+.mmm-hcvault table {
+  margin-top: 8px;
+  border-collapse: collapse;
+}
+
+.mmm-hcvault td {
+  padding: 2px 6px;
+} 

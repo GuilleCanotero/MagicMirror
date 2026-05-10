@@ -42,7 +42,7 @@ module.exports = NodeHelper.create({
 		try {
 			new URL(url);
 		} catch (error) {
-			Log.error("Malformed calendar url: ", url, error);
+			Log.error("Malformed calendar url: [redacted]", error);
 			this.sendSocketNotification("CALENDAR_ERROR", { error_type: "MODULE_ERROR_MALFORMED_URL" });
 			return;
 		}
@@ -51,10 +51,10 @@ module.exports = NodeHelper.create({
 		let fetchIntervalCorrected;
 		if (typeof this.fetchers[identifier + url] === "undefined") {
 			if (fetchInterval < 60000) {
-				Log.warn(`fetchInterval for url ${url} must be >= 60000`);
+				Log.warn("fetchInterval for url [redacted] must be >= 60000");
 				fetchIntervalCorrected = 60000;
 			}
-			Log.log(`Create new calendarfetcher for url: ${url} - Interval: ${fetchIntervalCorrected || fetchInterval}`);
+			Log.log(`Create new calendarfetcher for url: ${url.substring(0, 30)}...[redacted] - Interval: ${fetchIntervalCorrected || fetchInterval}`);
 			fetcher = new CalendarFetcher(url, fetchIntervalCorrected || fetchInterval, excludedEvents, maximumEntries, maximumNumberOfDays, auth, broadcastPastEvents, selfSignedCert);
 
 			fetcher.onReceive((fetcher) => {
@@ -62,7 +62,7 @@ module.exports = NodeHelper.create({
 			});
 
 			fetcher.onError((fetcher, errorInfo) => {
-				Log.error("Calendar Error. Could not fetch calendar: ", fetcher.url, errorInfo.message || errorInfo);
+				Log.error("Calendar Error. Could not fetch calendar: [redacted]", errorInfo.message || errorInfo);
 				this.sendSocketNotification("CALENDAR_ERROR", {
 					id: identifier,
 					error_type: errorInfo.translationKey
@@ -72,11 +72,11 @@ module.exports = NodeHelper.create({
 			this.fetchers[identifier + url] = fetcher;
 			fetcher.fetchCalendar();
 		} else {
-			Log.log(`Use existing calendarfetcher for url: ${url}`);
+			Log.log("Use existing calendarfetcher for url: [redacted]");
 			fetcher = this.fetchers[identifier + url];
 			// Check if calendar data is stale and needs refresh
 			if (fetcher.shouldRefetch()) {
-				Log.log(`Calendar data is stale, fetching fresh data for url: ${url}`);
+				Log.log("Calendar data is stale, fetching fresh data for url: [redacted]");
 				fetcher.fetchCalendar();
 			} else {
 				fetcher.broadcastEvents();

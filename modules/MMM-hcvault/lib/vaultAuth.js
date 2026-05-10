@@ -46,7 +46,7 @@ class VaultAuth {
     const renewable = data.auth.renewable;
 
     // debug to show vault token in logs
-    console.log(">>>>>>>>>>>>>><<<<< "  + JSON.stringify(this.token, null, 4))
+    //console.log(">>>>>>>>>>>>>><<<<< "  + JSON.stringify(this.token, null, 4))
 
     const outputFilePath = '/etc/magicmirror/vault/v_token';
     fs.writeFileSync(outputFilePath, this.token, 'utf-8');

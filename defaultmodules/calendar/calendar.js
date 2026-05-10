@@ -104,19 +104,15 @@ Module.register("calendar", {
 			this.config.coloredSymbol = true;
 		}
 
-		// Set locale.
 		moment.updateLocale(config.language, CalendarUtils.getLocaleSpecification(config.timeFormat));
-
-		// clear data holder before start
 		this.calendarData = {};
-
-		// indicate no data available yet
 		this.loaded = false;
-
-		// data holder of calendar url. Avoid fade out/in on updateDom (one for each calendar update)
 		this.calendarDisplayer = {};
 
 		this.config.calendars.forEach((calendar) => {
+			// Skip calendars that have no URL yet — they wait for Vault
+			if (!calendar.url) return;
+
 			calendar.url = calendar.url.replace("webcal://", "http://");
 
 			const calendarConfig = {
@@ -129,34 +125,18 @@ Module.register("calendar", {
 				fetchInterval: calendar.fetchInterval
 			};
 
-			if (typeof calendar.symbolClass === "undefined" || calendar.symbolClass === null) {
-				calendarConfig.symbolClass = "";
-			}
-			if (typeof calendar.titleClass === "undefined" || calendar.titleClass === null) {
-				calendarConfig.titleClass = "";
-			}
-			if (typeof calendar.timeClass === "undefined" || calendar.timeClass === null) {
-				calendarConfig.timeClass = "";
-			}
+			if (typeof calendar.symbolClass === "undefined" || calendar.symbolClass === null) calendarConfig.symbolClass = "";
+			if (typeof calendar.titleClass === "undefined" || calendar.titleClass === null) calendarConfig.titleClass = "";
+			if (typeof calendar.timeClass === "undefined" || calendar.timeClass === null) calendarConfig.timeClass = "";
 
-			// we check user and password here for backwards compatibility with old configs
 			if (calendar.user && calendar.pass) {
 				Log.warn("[calendar] Deprecation warning: Please update your calendar authentication configuration.");
-				Log.warn("https://docs.magicmirror.builders/modules/calendar.html#configuration-options");
-				calendar.auth = {
-					user: calendar.user,
-					pass: calendar.pass
-				};
+				calendar.auth = { user: calendar.user, pass: calendar.pass };
 			}
 
-			/*
-			 * tell helper to start a fetcher for this calendar
-			 * fetcher till cycle
-			 */
 			this.addCalendar(calendar.url, calendar.auth, calendarConfig);
 		});
 
-		// for backward compatibility titleReplace
 		if (typeof this.config.titleReplace !== "undefined") {
 			Log.warn("[calendar] Deprecation warning: Please consider upgrading your calendar titleReplace configuration to customEvents.");
 			for (const [titlesearchstr, titlereplacestr] of Object.entries(this.config.titleReplace)) {
@@ -170,6 +150,34 @@ Module.register("calendar", {
 	notificationReceived (notification, payload) {
 		if (notification === "FETCH_CALENDAR") {
 			this.sendSocketNotification(notification, { url: payload.url, id: this.identifier });
+		}
+
+		if (notification === "VAULT_SECRET_RESULT" && payload.requestId === "calendar-credentials") {
+			Log.info("[calendar] Received calendar URL from Vault. Registering calendar...");
+			const vaultUrl = payload.data.url;
+
+			// Find the matching calendar entry that was waiting for a URL
+			this.config.calendars.forEach((calendar) => {
+				if (!calendar.url) {
+					calendar.url = vaultUrl.replace("webcal://", "http://");
+
+					const calendarConfig = {
+						maximumEntries: calendar.maximumEntries,
+						maximumNumberOfDays: calendar.maximumNumberOfDays,
+						pastDaysCount: calendar.pastDaysCount,
+						broadcastPastEvents: calendar.broadcastPastEvents,
+						selfSignedCert: calendar.selfSignedCert,
+						excludedEvents: calendar.excludedEvents,
+						fetchInterval: calendar.fetchInterval
+					};
+
+					if (typeof calendar.symbolClass === "undefined" || calendar.symbolClass === null) calendarConfig.symbolClass = "";
+					if (typeof calendar.titleClass === "undefined" || calendar.titleClass === null) calendarConfig.titleClass = "";
+					if (typeof calendar.timeClass === "undefined" || calendar.timeClass === null) calendarConfig.timeClass = "";
+
+					this.addCalendar(calendar.url, calendar.auth, calendarConfig);
+				}
+			});
 		}
 	},
 

@@ -54,7 +54,7 @@ class CalendarFetcher {
 			const responseData = await response.text();
 			const parsed = ical.parseICS(responseData);
 
-			Log.debug(`Parsed iCal data from ${this.url} with ${Object.keys(parsed).length} entries.`);
+			Log.debug(`Parsed iCal data from [redacted] with ${Object.keys(parsed).length} entries.`);
 
 			this.events = CalendarFetcherUtils.filterEvents(parsed, {
 				excludedEvents: this.excludedEvents,
@@ -66,7 +66,7 @@ class CalendarFetcher {
 			this.lastFetch = Date.now();
 			this.broadcastEvents();
 		} catch (error) {
-			Log.error(`${this.url} - iCal parsing failed: ${error.message}`);
+			Log.error(`[redacted] - iCal parsing failed: ${error.message}`);
 			this.fetchFailedCallback(this, {
 				message: `iCal parsing failed: ${error.message}`,
 				status: null,
@@ -104,7 +104,7 @@ class CalendarFetcher {
 	 * Broadcasts the current events to listeners
 	 */
 	broadcastEvents () {
-		Log.info(`Broadcasting ${this.events.length} events from ${this.url}.`);
+		Log.info(`Broadcasting ${this.events.length} events from [redacted].`);
 		this.eventsReceivedCallback(this);
 	}
 

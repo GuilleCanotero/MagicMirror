@@ -8,6 +8,7 @@ Module.register("MMM-hcvault", {
     secretIdPath: "/etc/magicmirror/vault/secret_id",
     secretPath: "secret/data/magicmirror/test",
     spotifySecretPath: "secret/data/magicmirror/spotify",
+    calendarSecretPath: "secret/data/magicmirror/calendar",
     cacheTtlMs: 300000,
     refreshIntervalMs: 60000,
   },
@@ -25,21 +26,25 @@ Module.register("MMM-hcvault", {
     }, 500);
   },
 
-  _tryFetchSpotifyCredentials: function () {
-    if (this.vaultReady && this.allModulesStarted) {
-      Log.info("[MMM-hcvault] Both conditions met — fetching Spotify credentials from Vault...");
-      this.sendSocketNotification("VAULT_GET_SECRET", {
-        path: this.config.spotifySecretPath,
-        requestId: "spotify-credentials",
-      });
-    }
-  },
+_tryFetchSecrets: function () {
+  if (this.vaultReady && this.allModulesStarted) {
+    Log.info("[MMM-hcvault] Both conditions met — fetching secrets from Vault...");
+    this.sendSocketNotification("VAULT_GET_SECRET", {
+      path: this.config.spotifySecretPath,
+      requestId: "spotify-credentials",
+    });
+    this.sendSocketNotification("VAULT_GET_SECRET", {
+      path: this.config.calendarSecretPath,
+      requestId: "calendar-credentials",
+    });
+  }
+},
 
   notificationReceived: function (notification, payload) {
     if (notification === "ALL_MODULES_STARTED") {
       Log.info("[MMM-hcvault] ALL_MODULES_STARTED received. vaultReady=" + this.vaultReady);
       this.allModulesStarted = true;
-      this._tryFetchSpotifyCredentials();
+      this._tryFetchSecrets();
     }
   },
 
@@ -55,7 +60,7 @@ Module.register("MMM-hcvault", {
         requestId: "poll",
       });
 
-      this._tryFetchSpotifyCredentials();
+      this._tryFetchSecrets();
     }
 
 if (notification === "VAULT_SECRET_RESULT") {
@@ -72,6 +77,12 @@ if (payload.requestId === "spotify-credentials") {
     setTimeout(() => {
       Log.info("[MMM-hcvault] Broadcasting Spotify credentials now. Keys: " + Object.keys(this.spotifyCredentials.data).join(", "));
       this.sendNotification("VAULT_SECRET_RESULT", this.spotifyCredentials);
+    }, 0);
+  }
+  if (payload.requestId === "calendar-credentials") {
+    setTimeout(() => {
+      Log.info("[MMM-hcvault] Broadcasting calendar credentials...");
+      this.sendNotification("VAULT_SECRET_RESULT", payload);
     }, 0);
   }
 }

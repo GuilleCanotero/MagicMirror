@@ -61,7 +61,7 @@
 		"server:watch": "node ./serveronly/watcher.js",
 		"start": "node --run start:wayland",
 		"start:dev": "node --run start:wayland -- dev",
-		"start:wayland": "NODE_EXTRA_CA_CERTS=/opt/vault/tls/vault.crt WAYLAND_DISPLAY=\"${WAYLAND_DISPLAY:=wayland-1}\" ./node_modules/.bin/electron js/electron.js --ozone-platform=wayland --no-sandbox --disable-gpu",
+		"start:wayland": "NODE_EXTRA_CA_CERTS=/opt/pki/intermediate-ca/certs/ca-chain.crt WAYLAND_DISPLAY=\"${WAYLAND_DISPLAY:=wayland-0}\" ./node_modules/.bin/electron js/electron.js --ozone-platform=wayland --no-sandbox --disable-gpu",
 		"start:wayland:dev": "node --run start:wayland -- dev",
 		"start:windows": ".\\node_modules\\.bin\\electron js\\electron.js",
 		"start:windows:dev": "node --run start:windows -- dev",

@@ -52,7 +52,7 @@ let config = {
 			//header: "myVault",
 			//position: "top_right",
 			config: {
-				vaultAddr: "https://127.0.0.1:8200",
+				vaultAddr: "https://vault.localhost:8200",
 				authMethod: "approle",
 				roleIdPath: "/etc/magicmirror/vault/role_id",
 				secretIdPath: "/etc/magicmirror/vault/secret_id",
@@ -302,36 +302,43 @@ let config = {
 		},
  */
 		{
-		module: "MMM-anotherNewsFeed",
-		//header: "ANOTHER News Feed",
-		position: "bottom_bar",
-		config: {
-//			censorWords: ["Some", "improper words", "here"],
-			showDescription:true,
-			feeds: [
-				{
-					title: "N-TV Nachrichten",
-					url: "https://n-tv.de/rss"
-				},
-				{
-					title: "Spiegel",
-					url: "https://www.spiegel.de/schlagzeilen/tops/index.rss"						
-				},
-									{
-					title: "Spiegel-Wissenschaft",
-					url: "https://www.spiegel.de/wissenschaft/index.rss"						
-				},
-				{
-					title: "El Pais",
-					url: "https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/portada"
-				},
-				{
-					title: "BBC World News",
-					url: "https://feeds.bbci.co.uk/news/world/rss.xml"
-				}
-			],
-			showImage: true,
-		}
+			module: "MMM-anotherNewsFeed",
+			//header: "ANOTHER News Feed",
+			position: "bottom_bar",
+			config: {
+				//censorWords: ["Some", "improper words", "here"],
+				showDescription: true,
+				//lengthDescription: 100,
+				//showImage: false,
+				logFeedWarnings: true,
+				feeds: [
+					{
+						title: "N-TV Nachrichten",
+						url: "https://n-tv.de/rss",
+						encoding: "UTF-8" 
+					},
+					{
+						title: "Spiegel",
+						url: "https://www.spiegel.de/schlagzeilen/tops/index.rss",
+						encoding: "UTF-8" 						
+					},
+										{
+						title: "Spiegel-Wissenschaft",
+						url: "https://www.spiegel.de/wissenschaft/index.rss",
+						encoding: "UTF-8" 						
+					},
+					{
+						title: "El Pais",
+						url: "https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/portada",
+						encoding: "UTF-8" 
+					},
+					{
+						title: "BBC World News",
+						url: "https://feeds.bbci.co.uk/news/world/rss.xml",
+						encoding: "UTF-8" 
+					}
+				],
+			}
 		},
 		{
 		  module: "MMM-NowPlayingOnSpotify",

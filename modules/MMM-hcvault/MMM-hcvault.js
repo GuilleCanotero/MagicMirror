@@ -2,7 +2,7 @@
 
 Module.register("MMM-hcvault", {
   defaults: {
-    vaultAddr: "https://127.0.0.1:8200",
+    vaultAddr: "https://vault.localhost:8200",
     authMethod: "approle",
     roleIdPath: "/etc/magicmirror/vault/role_id",
     secretIdPath: "/etc/magicmirror/vault/secret_id",

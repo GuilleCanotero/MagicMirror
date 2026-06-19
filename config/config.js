@@ -309,7 +309,7 @@ let config = {
 				//censorWords: ["Some", "improper words", "here"],
 				showDescription: true,
 				//lengthDescription: 100,
-				//showImage: false,
+				showImage: false,
 				logFeedWarnings: true,
 				feeds: [
 					{
@@ -336,6 +336,11 @@ let config = {
 						title: "BBC World News",
 						url: "https://feeds.bbci.co.uk/news/world/rss.xml",
 						encoding: "UTF-8" 
+					}, 
+					{
+						title: "Tagesschau",
+						url: "https://www.tagesschau.de/infoservices/alle-meldungen-100~rss2.xml",
+						encoding: "UTF-8" 
 					}
 				],
 			}
@@ -347,6 +352,43 @@ let config = {
 //		    showCoverArt: false,
 		 }	
 		},
+
+
+		{
+			module: "MMM-BMWCarData/MMM-BMWCarDataInfo",
+			position: "middle_center",
+			header: "BMW",
+			config: {
+				vin: "WBA28FU0108D94723",
+				clientId: "3c565a85-721f-43f0-a54b-9408efadacdd",
+				geocoder: { contact: "canedo.guille@gmail.com" },
+				columns: 4,
+				topics: [
+				{ path: "vehicle.vehicle.travelledDistance", label: "gesamt" },
+				{ path: "vehicle.drivetrain.batteryManagement.header", label: "geladen" },
+				{ path: "vehicle.drivetrain.electricEngine.kombiRemainingElectricRange", label: "Reichweite" },
+				{ path: "vehicle.drivetrain.electricEngine.charging.status", label: "Ladezustand" },
+				{ path: "vehicle.location.address", label: "gerade hier", span: 3 },
+				{
+					path: "vehicle.powertrain.electric.battery.charging.power", label: "Ladeleistung",
+					showWhen: { "==": [{ "var": "vehicle.drivetrain.electricEngine.charging.status" }, "CHARGINGACTIVE"] }
+				}
+				]
+			}
+		},
+		// same info module definition again for the BMW with only VIN different (same client-id)
+		{
+			module: "MMM-BMWCarData/MMM-BMWCarDataMap",
+			position: "middle_center",
+			config: {
+				// no vins defined, so the position and tracks of both cars are displayed
+				width: "600px",
+				height: "480px",
+				trackHours: 12,
+			}
+		}
+
+
 /* 		{
 			module: 'MMM-Remote-Control',
 			position: 'bottom_right', // Required to show URL/QR code on mirror

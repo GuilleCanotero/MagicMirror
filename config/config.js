@@ -353,29 +353,21 @@ let config = {
 		 }	
 		},
 
-
+/*
 		{
 			module: "MMM-BMWCarData/MMM-BMWCarDataInfo",
 			position: "middle_center",
 			header: "BMW",
 			config: {
-				vin: "WBA28FU0108D94723",
-				clientId: "3c565a85-721f-43f0-a54b-9408efadacdd",
-				geocoder: { contact: "canedo.guille@gmail.com" },
+				// vin, clientId, geocoder.contact injected at runtime by MMM-hcvault
 				columns: 4,
 				topics: [
 				{ path: "vehicle.vehicle.travelledDistance", label: "gesamt" },
-				{ path: "vehicle.drivetrain.batteryManagement.header", label: "geladen" },
-				{ path: "vehicle.drivetrain.electricEngine.kombiRemainingElectricRange", label: "Reichweite" },
-				{ path: "vehicle.drivetrain.electricEngine.charging.status", label: "Ladezustand" },
-				{ path: "vehicle.location.address", label: "gerade hier", span: 3 },
-				{
-					path: "vehicle.powertrain.electric.battery.charging.power", label: "Ladeleistung",
-					showWhen: { "==": [{ "var": "vehicle.drivetrain.electricEngine.charging.status" }, "CHARGINGACTIVE"] }
-				}
 				]
 			}
 		},
+		*/
+/*
 		// same info module definition again for the BMW with only VIN different (same client-id)
 		{
 			module: "MMM-BMWCarData/MMM-BMWCarDataMap",
@@ -387,6 +379,7 @@ let config = {
 				trackHours: 12,
 			}
 		}
+		*/
 
 
 /* 		{

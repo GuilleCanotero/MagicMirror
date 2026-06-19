@@ -9,6 +9,7 @@ Module.register("MMM-hcvault", {
     secretPath: "secret/data/magicmirror/test",
     spotifySecretPath: "secret/data/magicmirror/spotify",
     calendarSecretPath: "secret/data/magicmirror/calendar",
+    bmwSecretPath: "secret/data/magicmirror/bmw",
     cacheTtlMs: 300000,
     refreshIntervalMs: 60000,
   },
@@ -37,6 +38,10 @@ _tryFetchSecrets: function () {
       path: this.config.calendarSecretPath,
       requestId: "calendar-credentials",
     });
+        this.sendSocketNotification("VAULT_GET_SECRET", {
+      path: this.config.bmwSecretPath,
+      requestId: "bmw-credentials",
+    });
   }
 },
 
@@ -63,29 +68,36 @@ _tryFetchSecrets: function () {
       this._tryFetchSecrets();
     }
 
-if (notification === "VAULT_SECRET_RESULT") {
-  if (payload.requestId === "poll") {
-    this.vaultData = payload.data;
-    this.vaultStatus = "OK";
-    this.loaded = true;
-    this.updateDom();
-  }
-if (payload.requestId === "spotify-credentials") {
-    Log.info("[MMM-hcvault] Spotify credentials received from node_helper. Scheduling broadcast...");
-    // Store and broadcast on next tick — ensures we're in the browser event loop
-    this.spotifyCredentials = payload;
-    setTimeout(() => {
-      Log.info("[MMM-hcvault] Broadcasting Spotify credentials now. Keys: " + Object.keys(this.spotifyCredentials.data).join(", "));
-      this.sendNotification("VAULT_SECRET_RESULT", this.spotifyCredentials);
-    }, 0);
-  }
-  if (payload.requestId === "calendar-credentials") {
-    setTimeout(() => {
-      Log.info("[MMM-hcvault] Broadcasting calendar credentials...");
-      this.sendNotification("VAULT_SECRET_RESULT", payload);
-    }, 0);
-  }
-}
+    if (notification === "VAULT_SECRET_RESULT") {
+      if (payload.requestId === "poll") {
+        this.vaultData = payload.data;
+        this.vaultStatus = "OK";
+        this.loaded = true;
+        this.updateDom();
+      }
+    if (payload.requestId === "spotify-credentials") {
+        Log.info("[MMM-hcvault] Spotify credentials received from node_helper. Scheduling broadcast...");
+        // Store and broadcast on next tick — ensures we're in the browser event loop
+        this.spotifyCredentials = payload;
+        setTimeout(() => {
+          Log.info("[MMM-hcvault] Broadcasting Spotify credentials now. Keys: " + Object.keys(this.spotifyCredentials.data).join(", "));
+          this.sendNotification("VAULT_SECRET_RESULT", this.spotifyCredentials);
+        }, 0);
+      }
+      if (payload.requestId === "calendar-credentials") {
+        setTimeout(() => {
+          Log.info("[MMM-hcvault] Broadcasting calendar credentials...");
+          this.sendNotification("VAULT_SECRET_RESULT", payload);
+        }, 0);
+      }
+    }
+
+    if (payload.requestId === "bmw-credentials") {
+      setTimeout(() => {
+        Log.info("[MMM-hcvault] Broadcasting BMW credentials...");
+        this.sendNotification("VAULT_SECRET_RESULT", payload);
+      }, 0);
+    }
 
     if (notification === "VAULT_ERROR") {
       this.vaultStatus = "Error: " + payload.error;
